@@ -24,10 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    decentralised_p2p.cpp
+    decentralised_p2p.cpp \
+    dc_server.cpp
 
 HEADERS += \
-    decentralised_p2p.h
+    decentralised_p2p.h \
+    dc_server.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

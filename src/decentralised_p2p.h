@@ -2,6 +2,8 @@
 #define DECENTRALISED_P2P_H
 
 #include <QObject>
+#include <QThreadPool>
+#include "dc_server.h"
 
 class decentralised_p2p: public QObject
 {
@@ -22,6 +24,7 @@ class decentralised_p2p: public QObject
     public slots:
 
     private:
+        dc_server *server;
 };
 
 #endif // DECENTRALISED_P2P_H
