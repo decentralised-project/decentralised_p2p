@@ -8,7 +8,7 @@ QT       += network
 
 QT       -= gui
 
-TARGET = dc-p2p-qt
+TARGET = decentralised_p2p
 TEMPLATE = lib
 CONFIG += staticlib
 
@@ -23,9 +23,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += dc_p2p.cpp
+SOURCES += \
+    decentralised_p2p.cpp
 
-HEADERS += dc_p2p.h
+HEADERS += \
+    decentralised_p2p.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

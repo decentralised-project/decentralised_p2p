@@ -1,13 +1,13 @@
-#ifndef DC_P2P_H
-#define DC_P2P_H
+#ifndef DECENTRALISED_P2P_H
+#define DECENTRALISED_P2P_H
 
 #include <QObject>
 
-class dc_p2p: public QObject
+class decentralised_p2p: public QObject
 {
     Q_OBJECT
     public:
-        explicit dc_p2p(QObject *parent = 0);
+        explicit decentralised_p2p(QObject *parent = 0);
 
         void Start();
         void Stop();
@@ -24,4 +24,4 @@ class dc_p2p: public QObject
     private:
 };
 
-#endif // DC_P2P_H
+#endif // DECENTRALISED_P2P_H
