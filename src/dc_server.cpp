@@ -1,8 +1,9 @@
 #include "dc_server.h"
 
-dc_server::dc_server()
+dc_server::dc_server(int port)
 {
     isRunning = false;
+    incomingPort = port;
 }
 
 void dc_server::run()

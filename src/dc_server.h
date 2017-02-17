@@ -6,7 +6,7 @@
 class dc_server : public QRunnable
 {
 public:
-    dc_server();
+    dc_server(int port);
 
     void run();
 
@@ -16,6 +16,7 @@ public:
 
 private:
     bool isRunning;
+    int incomingPort;
 };
 
 #endif // DC_SERVER_H

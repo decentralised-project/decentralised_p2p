@@ -1,9 +1,9 @@
 #include "decentralised_p2p.h"
 
-decentralised_p2p::decentralised_p2p(QObject *parent) :
+decentralised_p2p::decentralised_p2p(QObject *parent, int incomingPort) :
     QObject(parent)
 {
-    server = new dc_server();
+    server = new dc_server(incomingPort);
 }
 
 void decentralised_p2p::Start()

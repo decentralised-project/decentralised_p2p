@@ -9,7 +9,7 @@ class decentralised_p2p: public QObject
 {
     Q_OBJECT
     public:
-        explicit decentralised_p2p(QObject *parent = 0);
+        explicit decentralised_p2p(QObject *parent = 0, int incomingPort = 6453);
 
         void Start();
         void Stop();
@@ -24,7 +24,7 @@ class decentralised_p2p: public QObject
     public slots:
 
     private:
-        dc_server *server;
+        dc_server *server;        
 };
 
 #endif // DECENTRALISED_P2P_H
