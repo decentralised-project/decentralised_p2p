@@ -2,8 +2,8 @@
 #define DECENTRALISED_P2P_H
 
 #include <QObject>
-#include <QThreadPool>
-#include "dc_server.h"
+#include <QTcpServer>
+#include "peer.h"
 
 class decentralised_p2p: public QObject
 {
@@ -20,11 +20,18 @@ class decentralised_p2p: public QObject
         void dataReceived(QByteArray data);
         void connectionEstablished();
         void connectionDropped();
+        void connectionIncoming();
+        void serverStarted(int port);
+        void serverError(QString message);
 
     public slots:
 
     private:
-        dc_server *server;        
+
+        void on_newconnection();
+
+        int _incomingPort;
+        QTcpServer* _server;
 };
 
 #endif // DECENTRALISED_P2P_H

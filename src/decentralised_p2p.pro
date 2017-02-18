@@ -25,11 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     decentralised_p2p.cpp \
-    dc_server.cpp
+    peer.cpp
 
 HEADERS += \
     decentralised_p2p.h \
-    dc_server.h
+    peer.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
