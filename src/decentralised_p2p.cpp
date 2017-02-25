@@ -5,6 +5,7 @@ decentralised_p2p::decentralised_p2p(QObject *parent, int incomingPort) :
 {
     _incomingPort = incomingPort;
     _server = new QTcpServer(this);
+    _clients = new QList<QTcpSocket>();
     connect(_server, &QTcpServer::newConnection, this, &decentralised_p2p::on_newconnection);
 }
 
@@ -21,8 +22,8 @@ void decentralised_p2p::Start()
 
 void decentralised_p2p::Stop()
 {
-    //if(server->IsRunning())
-    //    server->stop();
+    if(_server->isListening())
+        _server->close();
 
     //QThreadPool::globalInstance()->waitForDone(5000);
 }

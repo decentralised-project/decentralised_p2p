@@ -2,7 +2,9 @@
 #define DECENTRALISED_P2P_H
 
 #include <QObject>
+#include <QList>
 #include <QTcpServer>
+#include <QTcpSocket>
 #include "peer.h"
 
 class decentralised_p2p: public QObject
@@ -32,6 +34,7 @@ class decentralised_p2p: public QObject
 
         int _incomingPort;
         QTcpServer* _server;
+        QList<QTcpSocket>* _clients;
 };
 
 #endif // DECENTRALISED_P2P_H
