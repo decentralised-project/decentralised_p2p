@@ -5,6 +5,7 @@
 #include <QList>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QHostInfo>
 #include "peer.h"
 
 class decentralised_p2p: public QObject
@@ -17,6 +18,7 @@ class decentralised_p2p: public QObject
         void Stop();
 
         void Send(QByteArray data);
+        void RequestDnsSeeds();
 
     signals:
         void dataReceived(QByteArray data);
@@ -25,11 +27,15 @@ class decentralised_p2p: public QObject
         void connectionIncoming();
         void serverStarted(int port);
         void serverError(QString message);
+        void dnsSeedReceived(QString ip);
+        void dnsSeedError(QString message);
 
     public slots:
 
-    private:
+    private slots:
+        void on_dnslookup(QHostInfo e);
 
+    private:
         void on_newconnection();
 
         int _incomingPort;

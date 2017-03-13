@@ -24,8 +24,6 @@ void decentralised_p2p::Stop()
 {
     if(_server->isListening())
         _server->close();
-
-    //QThreadPool::globalInstance()->waitForDone(5000);
 }
 
 void decentralised_p2p::Send(QByteArray data)
@@ -33,7 +31,36 @@ void decentralised_p2p::Send(QByteArray data)
 
 }
 
+void decentralised_p2p::RequestDnsSeeds()
+{
+    QHostInfo::lookupHost("dnsseed.decentralised-project.org",
+                          this, SLOT(on_dnslookup(QHostInfo)));
+
+//    QHostInfo::lookupHost("dnsseed.evil.center",
+//                          this, SLOT(on_dnslookup(QHostInfo)));
+}
+
 void decentralised_p2p::on_newconnection()
 {
     emit connectionIncoming();
+}
+
+void decentralised_p2p::on_dnslookup(QHostInfo e)
+{
+    if(e.error() == QHostInfo::NoError)
+    {
+        QList<QHostAddress> addresses = e.addresses();
+        if(addresses.size() == 0)
+        {
+            emit dnsSeedError("No IP Addresses.");
+            return;
+        }
+        for (QList<QHostAddress>::iterator it = addresses.begin() ; it != addresses.end(); ++it)
+        {
+            QHostAddress h((*it));
+                emit dnsSeedReceived((*it).toString());
+        }
+    }
+    else
+        emit dnsSeedError(e.errorString());
 }
