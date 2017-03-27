@@ -38,6 +38,7 @@ class decentralised_p2p: public QObject
     private:
         void on_newconnection();
 
+        int _currentDnsSeedIndex;
         int _incomingPort;
         QTcpServer* _server;
         QList<QTcpSocket>* _clients;

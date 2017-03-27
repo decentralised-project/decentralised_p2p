@@ -1,8 +1,12 @@
 #include "decentralised_p2p.h"
 
+const QString _dnsSeeds[] = { "dnsseed.decentralised-project.org",
+                              "dnsseed.evil.center" };
+
 decentralised_p2p::decentralised_p2p(QObject *parent, int incomingPort) :
     QObject(parent)
 {
+    _currentDnsSeedIndex = 0;
     _incomingPort = incomingPort;
     _server = new QTcpServer(this);
     _clients = new QList<QTcpSocket>();
@@ -33,11 +37,8 @@ void decentralised_p2p::Send(QByteArray data)
 
 void decentralised_p2p::RequestDnsSeeds()
 {
-    QHostInfo::lookupHost("dnsseed.decentralised-project.org",
+    QHostInfo::lookupHost(_dnsSeeds[_currentDnsSeedIndex],
                           this, SLOT(on_dnslookup(QHostInfo)));
-
-//    QHostInfo::lookupHost("dnsseed.evil.center",
-//                          this, SLOT(on_dnslookup(QHostInfo)));
 }
 
 void decentralised_p2p::on_newconnection()
@@ -55,10 +56,9 @@ void decentralised_p2p::on_dnslookup(QHostInfo e)
             emit dnsSeedError("No IP Addresses.");
             return;
         }
-        for (QList<QHostAddress>::iterator it = addresses.begin() ; it != addresses.end(); ++it)
+        for (int i = 0; i < addresses.size(); ++i)
         {
-            QHostAddress h((*it));
-                emit dnsSeedReceived((*it).toString());
+            emit dnsSeedReceived(addresses[i].toString());
         }
     }
     else
