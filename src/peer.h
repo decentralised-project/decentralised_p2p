@@ -15,7 +15,7 @@ public:
 
 signals:
     void on_connected();
-    void on_connectionError();
+    void on_connectionError(QString message);
 
 public slots:
 

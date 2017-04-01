@@ -55,9 +55,9 @@ void decentralised_p2p::on_outgoing_connected()
     emit connectionOutgoing();
 }
 
-void decentralised_p2p::on_outgoing_error()
+void decentralised_p2p::on_outgoing_error(QString message)
 {
-    emit outgoingError();
+    emit outgoingError(message);
 }
 
 void decentralised_p2p::on_newconnection()

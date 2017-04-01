@@ -31,14 +31,14 @@ class decentralised_p2p: public QObject
         void serverError(QString message);
         void dnsSeedReceived(QString ip);
         void dnsSeedError(QString message);
-        void outgoingError();
+        void outgoingError(QString message);
 
     public slots:
 
     private slots:
         void on_dnslookup(QHostInfo e);
         void on_outgoing_connected();
-        void on_outgoing_error();
+        void on_outgoing_error(QString message);
 
     private:
         void on_newconnection();

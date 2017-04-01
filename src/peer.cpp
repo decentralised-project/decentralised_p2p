@@ -29,5 +29,6 @@ void peer::on_readTcpData()
 
 void peer::on_error(QAbstractSocket::SocketError err)
 {
-    emit on_connectionError();
+    QString msg = _socket->errorString();
+    emit on_connectionError(msg);
 }
