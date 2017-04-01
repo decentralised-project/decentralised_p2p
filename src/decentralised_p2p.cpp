@@ -9,7 +9,7 @@ decentralised_p2p::decentralised_p2p(QObject *parent, int incomingPort) :
     _currentDnsSeedIndex = 0;
     _incomingPort = incomingPort;
     _server = new QTcpServer(this);
-    _clients = new QList<QTcpSocket>();
+    _clients = new QList<peer*>();
     connect(_server, &QTcpServer::newConnection, this, &decentralised_p2p::on_newconnection);
 }
 
@@ -39,6 +39,25 @@ void decentralised_p2p::RequestDnsSeeds()
 {
     QHostInfo::lookupHost(_dnsSeeds[_currentDnsSeedIndex],
                           this, SLOT(on_dnslookup(QHostInfo)));
+}
+
+void decentralised_p2p::StartOutgoing(QString ip, int port)
+{
+    peer* outgoing = new peer(this);
+    QObject::connect(outgoing, &peer::on_connected, this, &decentralised_p2p::on_outgoing_connected);
+    QObject::connect(outgoing, &peer::on_connectionError, this, &decentralised_p2p::on_outgoing_error);
+    outgoing->TryConnect(ip, port);
+    _clients->append(outgoing);
+}
+
+void decentralised_p2p::on_outgoing_connected()
+{
+    emit connectionOutgoing();
+}
+
+void decentralised_p2p::on_outgoing_error()
+{
+    emit outgoingError();
 }
 
 void decentralised_p2p::on_newconnection()
