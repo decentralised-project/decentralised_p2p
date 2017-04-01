@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QAbstractSocket>
+#include <QtNetwork>
+
+class QTcpSocket;
+class QNetworkSession;
 
 class peer : public QObject
 {
@@ -20,11 +24,14 @@ signals:
 public slots:
 
 private slots:
+    void sessionOpened();
     void on_readTcpData();
     void on_error(QAbstractSocket::SocketError err);
 
 private:
     QTcpSocket* _socket;
+    QDataStream _in;
+    QNetworkSession* _networkSession;
 };
 
 #endif // PEER_H
