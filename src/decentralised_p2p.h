@@ -25,7 +25,7 @@ class decentralised_p2p: public QObject
         void dataReceived(QByteArray data);
         void connectionEstablished();
         void connectionDropped();
-        void connectionIncoming();
+        void connectionIncoming(QHostAddress peerAddress);
         void connectionOutgoing();
         void serverStarted(int port);
         void serverError(QString message);

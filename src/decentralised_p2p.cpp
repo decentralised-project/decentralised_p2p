@@ -62,7 +62,8 @@ void decentralised_p2p::on_outgoing_error(QString message)
 
 void decentralised_p2p::on_newconnection()
 {
-    emit connectionIncoming();
+    QTcpSocket *clientSocket = _server->nextPendingConnection();
+    emit connectionIncoming(clientSocket->peerAddress());
 }
 
 void decentralised_p2p::on_dnslookup(QHostInfo e)
