@@ -7,7 +7,7 @@ peer::peer(QObject *parent) : QObject(parent)
     _in.setDevice(_socket);
     _in.setVersion(QDataStream::Qt_4_0);
 
-    connect(_socket, SIGNAL(readyRead()), SLOT(readTcpData()));
+    //connect(_socket, SIGNAL(readyRead()), SLOT(readTcpData()));
     typedef void (QAbstractSocket::*QAbstractSocketErrorSignal)(QAbstractSocket::SocketError);
     connect(_socket, static_cast<QAbstractSocketErrorSignal>(&QAbstractSocket::error),
                 this, &peer::on_error);
@@ -54,8 +54,8 @@ void peer::on_readTcpData()
 
 }
 
-void peer::on_error(QAbstractSocket::SocketError err)
+void peer::on_error()
 {
     QString msg = _socket->errorString();
-    emit on_connectionError(msg);
+    emit on_connection_error(msg);
 }

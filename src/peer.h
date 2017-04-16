@@ -19,14 +19,14 @@ public:
 
 signals:
     void on_connected();
-    void on_connectionError(QString message);
+    void on_connection_error(QString message);
 
 public slots:
 
 private slots:
     void sessionOpened();
     void on_readTcpData();
-    void on_error(QAbstractSocket::SocketError err);
+    void on_error();
 
 private:
     QTcpSocket* _socket;

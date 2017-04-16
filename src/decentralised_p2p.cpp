@@ -45,7 +45,7 @@ void decentralised_p2p::StartOutgoing(QString ip, int port)
 {
     peer* outgoing = new peer(this);
     QObject::connect(outgoing, &peer::on_connected, this, &decentralised_p2p::on_outgoing_connected);
-    QObject::connect(outgoing, &peer::on_connectionError, this, &decentralised_p2p::on_outgoing_error);
+    QObject::connect(outgoing, &peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
     outgoing->TryConnect(ip, port);
     _clients->append(outgoing);
 }
