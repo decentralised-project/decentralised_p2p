@@ -6,6 +6,8 @@
 #include <QTcpServer>
 #include <QHostInfo>
 #include <QSignalMapper>
+#include <openssl/ec.h>
+#include <openssl/ecdsa.h>
 #include "peer.h"
 
 class decentralised_p2p: public QObject
@@ -47,6 +49,7 @@ class decentralised_p2p: public QObject
         int _incomingPort;
         QTcpServer* _server;
         QList<peer*>* _clients;
+        EC_KEY* _instanceKey;
 };
 
 #endif // DECENTRALISED_P2P_H
