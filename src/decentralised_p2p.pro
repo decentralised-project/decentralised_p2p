@@ -16,6 +16,10 @@ win32:CONFIG(release, debug|release): LIBS += -L"C:/Program Files/OpenSSL/lib/" 
 else:win32:CONFIG(debug, debug|release): LIBS += -L"C:/Program Files/OpenSSL/lib/" -llibcrypto
 else:unix: LIBS += -L"/usr/local/lib/" -lcrypto
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../decentralised_crypt/build-decentralised_crypt-Desktop_Qt_5_8_0_MSVC2013_64bit2-Debug/release/ -ldecentralised_crypt
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../decentralised_crypt/build-decentralised_crypt-Desktop_Qt_5_8_0_MSVC2013_64bit2-Debug/debug/ -ldecentralised_crypt
+else:unix: LIBS += -L$$PWD/../../decentralised_crypt/build-decentralised_crypt-build-decentralised_p2p-Desktop-Debug-Debug/ -ldecentralised_crypt
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -24,6 +28,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 win32:INCLUDEPATH += "C:/Program Files/OpenSSL/include/"
 else:INCLUDEPATH += "/usr/local/include/"
+
+INCLUDEPATH += $$PWD/../../decentralised_crypt/src
+DEPENDPATH += $$PWD/../../decentralised_crypt/build-decentralised_crypt-Desktop_Qt_5_8_0_MSVC2013_64bit2-Debug/debug
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.

@@ -3,9 +3,10 @@
 const QString _dnsSeeds[] = { "dnsseed.decentralised-project.org",
                               "dnsseed.evil.center" };
 
-decentralised_p2p::decentralised_p2p(EC_KEY *instanceKey, QObject *parent, int incomingPort) :
+decentralised_p2p::decentralised_p2p(EC_KEY *instanceKey, decentralised_crypt *crypt, QObject *parent, int incomingPort) :
     QObject(parent)
     , _networkSession(Q_NULLPTR)
+    , _crypt(crypt)
 {
     _instanceKey = instanceKey;
     _currentDnsSeedIndex = 0;
@@ -68,7 +69,7 @@ void decentralised_p2p::RequestDnsSeeds()
 
 void decentralised_p2p::StartOutgoing(QString ip, int port)
 {
-    dc_peer* outgoing = new dc_peer(false, this, new QTcpSocket(this));
+    dc_peer* outgoing = new dc_peer(false, (EC_POINT*)_crypt->get_public_key(_instanceKey), this, new QTcpSocket(this));
     QObject::connect(outgoing, &dc_peer::on_connected, this, &decentralised_p2p::on_outgoing_connected);
     QObject::connect(outgoing, &dc_peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
     outgoing->TryConnect(ip, port);
@@ -101,7 +102,7 @@ void decentralised_p2p::on_newconnection()
 {
     QTcpSocket *clientSocket = _server->nextPendingConnection();
 
-    dc_peer* peer = new dc_peer(true, _crypt-> _instanceKey, this, clientSocket);
+    dc_peer* peer = new dc_peer(true, (EC_POINT*)_crypt->get_public_key(_instanceKey), this, clientSocket);
     QObject::connect(peer, &dc_peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
     _clients->append(peer);
 

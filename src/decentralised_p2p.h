@@ -9,12 +9,13 @@
 #include <openssl/ec.h>
 #include <openssl/ecdsa.h>
 #include "dc_peer.h"
+#include "decentralised_crypt.h"
 
 class decentralised_p2p: public QObject
 {
     Q_OBJECT
     public:
-        explicit decentralised_p2p(EC_KEY *instanceKey, QObject *parent = 0, int incomingPort = 6453);
+        explicit decentralised_p2p(EC_KEY *instanceKey, decentralised_crypt *crypt, QObject *parent = 0, int incomingPort = 6453);
 
         void Start();
         void Stop();
@@ -53,6 +54,7 @@ class decentralised_p2p: public QObject
         QList<dc_peer*>* _clients;
         EC_KEY* _instanceKey;
         QNetworkSession* _networkSession;
+        decentralised_crypt *_crypt;
 };
 
 #endif // DECENTRALISED_P2P_H
