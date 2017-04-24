@@ -101,8 +101,8 @@ void decentralised_p2p::on_newconnection()
 {
     QTcpSocket *clientSocket = _server->nextPendingConnection();
 
-    dc_peer* peer = new dc_peer(true, this, clientSocket);
-    peer->WaitForData();
+    dc_peer* peer = new dc_peer(true, _crypt-> _instanceKey, this, clientSocket);
+    QObject::connect(peer, &dc_peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
     _clients->append(peer);
 
     emit connectionIncoming(peer);
