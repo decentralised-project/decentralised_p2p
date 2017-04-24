@@ -32,11 +32,11 @@ else:INCLUDEPATH += "/usr/local/include/"
 
 SOURCES += \
     decentralised_p2p.cpp \
-    peer.cpp
+    dc_peer.cpp
 
 HEADERS += \
     decentralised_p2p.h \
-    peer.h
+    dc_peer.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
