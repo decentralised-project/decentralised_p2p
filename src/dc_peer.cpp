@@ -5,6 +5,8 @@ dc_peer::dc_peer(bool isIncoming, EC_POINT* localInstancePublicKey, QObject *par
 {
     _isIncoming = isIncoming;
     _localInstancePublicKey = localInstancePublicKey;
+    _dataSize = 0;
+    _buffer = new QByteArray();
 
     _in.setDevice(_socket);
     _in.setVersion(QDataStream::Qt_4_0);
@@ -39,6 +41,7 @@ void dc_peer::outgoing_connected()
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
 
+    out << 16;
     out << _localInstancePublicKey;
 
     _socket->write(block);
@@ -46,17 +49,37 @@ void dc_peer::outgoing_connected()
 
 void dc_peer::readTcpData()
 {
-    _in.startTransaction();
+    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 
-    QByteArray data;
-    _in >> data;
+    while (socket->bytesAvailable() > 0)
+    {
+        _buffer->append(socket->readAll());
+        if (_dataSize = 0 && _buffer->size() >= 4)
+        {
+            _dataSize = arrayToInt(_buffer->mid(0, 4));
+            _buffer->remove(0, 4);
+        }
 
-    if (!_in.commitTransaction())
-        return;
+        if (_dataSize > 0 && _buffer->size() >= _dataSize)
+        {
+            QByteArray data = _buffer->mid(0, _dataSize);
+            _buffer->remove(0, _dataSize);
+            _dataSize = 0;
+            emit on_data_recieved(data);
+        }
+    }
 }
 
 void dc_peer::connectionError()
 {
     QString msg = _socket->errorString();
     emit on_connection_error(msg);
+}
+
+qint32 dc_peer::arrayToInt(QByteArray source)
+{
+    qint32 temp;
+    QDataStream data(&source, QIODevice::ReadWrite);
+    data >> temp;
+    return temp;
 }

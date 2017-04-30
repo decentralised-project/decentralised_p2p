@@ -16,6 +16,9 @@ class dc_peer : public QObject
     Q_OBJECT
 public:
     explicit dc_peer(bool isIncoming, EC_POINT* localInstancePublicKey, QObject *parent = 0, QTcpSocket *socket = 0);
+    virtual ~dc_peer() {
+        delete _buffer;
+    }
 
     void TryConnect(QString ip, int port);
     QHostAddress GetRemoteAddress();
@@ -24,6 +27,7 @@ public:
 signals:
     void on_connected();
     void on_connection_error(QString message);
+    void on_data_recieved(QByteArray data);
 
 public slots:
 
@@ -33,9 +37,13 @@ private slots:
     void outgoing_connected();
 
 private:
+    qint32 arrayToInt(QByteArray source);
+
     QTcpSocket* _socket;
     QDataStream _in;
     bool _isIncoming;
+    qint32 _dataSize;
+    QByteArray *_buffer;
 
     EC_POINT* _localInstancePublicKey;
     unsigned char* shared_secret;
