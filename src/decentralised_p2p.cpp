@@ -69,9 +69,10 @@ void decentralised_p2p::RequestDnsSeeds()
 
 void decentralised_p2p::StartOutgoing(QString ip, int port)
 {
-    dc_peer* outgoing = new dc_peer(false, (EC_POINT*)_crypt->get_public_key(_instanceKey), this, new QTcpSocket(this));
+    dc_peer* outgoing = new dc_peer(false, _crypt->to_base58((EC_POINT*)_crypt->get_public_key(_instanceKey)), this, new QTcpSocket(this));
     QObject::connect(outgoing, &dc_peer::on_connected, this, &decentralised_p2p::on_outgoing_connected);
-    QObject::connect(outgoing, &dc_peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
+    QObject::connect(outgoing, &dc_peer::on_connection_error, this, &decentralised_p2p::on_error);
+    QObject::connect(outgoing, &dc_peer::on_data_received, this, &decentralised_p2p::on_data_received);
     outgoing->TryConnect(ip, port);
     _clients->append(outgoing);
 }
@@ -93,7 +94,7 @@ void decentralised_p2p::on_session_opened()
     // TODO: emit message?
 }
 
-void decentralised_p2p::on_outgoing_error(QString message)
+void decentralised_p2p::on_error(QString message)
 {
     emit outgoingError(message);
 }
@@ -102,8 +103,9 @@ void decentralised_p2p::on_newconnection()
 {
     QTcpSocket *clientSocket = _server->nextPendingConnection();
 
-    dc_peer* peer = new dc_peer(true, (EC_POINT*)_crypt->get_public_key(_instanceKey), this, clientSocket);
-    QObject::connect(peer, &dc_peer::on_connection_error, this, &decentralised_p2p::on_outgoing_error);
+    dc_peer* peer = new dc_peer(true, _crypt->to_base58((EC_POINT*)_crypt->get_public_key(_instanceKey)), this, clientSocket);
+    QObject::connect(peer, &dc_peer::on_connection_error, this, &decentralised_p2p::on_error);
+    QObject::connect(peer, &dc_peer::on_data_received, this, &decentralised_p2p::on_data_received);
     _clients->append(peer);
 
     emit connectionIncoming(peer);
@@ -126,4 +128,9 @@ void decentralised_p2p::on_dnslookup(QHostInfo e)
     }
     else
         emit dnsSeedError(e.errorString());
+}
+
+void decentralised_p2p::on_data_received(QByteArray data)
+{
+    emit dataReceived(data);
 }

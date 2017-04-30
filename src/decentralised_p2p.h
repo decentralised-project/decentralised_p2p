@@ -42,8 +42,9 @@ class decentralised_p2p: public QObject
     private slots:
         void on_dnslookup(QHostInfo e);
         void on_outgoing_connected();
-        void on_outgoing_error(QString message);
+        void on_error(QString message);
         void on_session_opened();
+        void on_data_received(QByteArray data);
 
     private:
         void on_newconnection();

@@ -1,12 +1,12 @@
 #include "dc_peer.h"
 
-dc_peer::dc_peer(bool isIncoming, EC_POINT* localInstancePublicKey, QObject *parent, QTcpSocket *socket) : QObject(parent)
+dc_peer::dc_peer(bool isIncoming, QString localInstancePublicKey, QObject *parent, QTcpSocket *socket) : QObject(parent)
   , _socket(socket)
+  , _buffer(new QByteArray())
 {
     _isIncoming = isIncoming;
     _localInstancePublicKey = localInstancePublicKey;
     _dataSize = 0;
-    _buffer = new QByteArray();
 
     _in.setDevice(_socket);
     _in.setVersion(QDataStream::Qt_4_0);
@@ -37,14 +37,8 @@ bool dc_peer::IsIncoming()
 
 void dc_peer::outgoing_connected()
 {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-
-    out << 16;
-    out << _localInstancePublicKey;
-
-    _socket->write(block);
+    _socket->write(intToArray(_localInstancePublicKey.size()));
+    _socket->write(_localInstancePublicKey.toLocal8Bit());
 }
 
 void dc_peer::readTcpData()
@@ -54,18 +48,20 @@ void dc_peer::readTcpData()
     while (socket->bytesAvailable() > 0)
     {
         _buffer->append(socket->readAll());
-        if (_dataSize = 0 && _buffer->size() >= 4)
+        int buffSize = _buffer->size();
+
+        if (_dataSize == 0 && buffSize >= 4)
         {
             _dataSize = arrayToInt(_buffer->mid(0, 4));
             _buffer->remove(0, 4);
         }
 
-        if (_dataSize > 0 && _buffer->size() >= _dataSize)
+        if (_dataSize > 0 && buffSize >= _dataSize)
         {
             QByteArray data = _buffer->mid(0, _dataSize);
             _buffer->remove(0, _dataSize);
             _dataSize = 0;
-            emit on_data_recieved(data);
+            emit on_data_received(data);
         }
     }
 }
@@ -81,5 +77,13 @@ qint32 dc_peer::arrayToInt(QByteArray source)
     qint32 temp;
     QDataStream data(&source, QIODevice::ReadWrite);
     data >> temp;
+    return temp;
+}
+
+QByteArray dc_peer::intToArray(qint32 source)
+{
+    QByteArray temp;
+    QDataStream data(&temp, QIODevice::ReadWrite);
+    data << source;
     return temp;
 }
