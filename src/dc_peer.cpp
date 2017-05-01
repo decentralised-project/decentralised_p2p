@@ -61,7 +61,7 @@ void dc_peer::readTcpData()
             QByteArray data = _buffer->mid(0, _dataSize);
             _buffer->remove(0, _dataSize);
             _dataSize = 0;
-            emit on_data_received(data);
+            emit on_data_received(this, data);
         }
     }
 }

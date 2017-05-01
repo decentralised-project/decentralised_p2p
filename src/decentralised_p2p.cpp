@@ -130,7 +130,16 @@ void decentralised_p2p::on_dnslookup(QHostInfo e)
         emit dnsSeedError(e.errorString());
 }
 
-void decentralised_p2p::on_data_received(QByteArray data)
+void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
 {
+    QString instKeyBase58 =_crypt->to_base58((EC_POINT*)_crypt->get_public_key(_instanceKey));
+    QString remoteKeyBase58(data);
+    if(instKeyBase58 == remoteKeyBase58)
+    {
+        // TODO: drop connection to self
+
+        int clientIndex = _clients->indexOf(sender);
+    }
+
     emit dataReceived(data);
 }

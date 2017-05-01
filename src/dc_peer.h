@@ -27,7 +27,7 @@ public:
 signals:
     void on_connected();
     void on_connection_error(QString message);
-    void on_data_received(QByteArray data);
+    void on_data_received(dc_peer *sender, QByteArray data);
 
 public slots:
 

@@ -44,7 +44,7 @@ class decentralised_p2p: public QObject
         void on_outgoing_connected();
         void on_error(QString message);
         void on_session_opened();
-        void on_data_received(QByteArray data);
+        void on_data_received(dc_peer *sender, QByteArray data);
 
     private:
         void on_newconnection();
