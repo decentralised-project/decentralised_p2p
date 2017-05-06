@@ -43,7 +43,8 @@ SOURCES += \
 
 HEADERS += \
     decentralised_p2p.h \
-    dc_peer.h
+    dc_peer.h \
+    dc_connection_dropped.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

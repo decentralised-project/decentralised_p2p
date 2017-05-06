@@ -10,6 +10,7 @@
 #include <openssl/ecdsa.h>
 #include "dc_peer.h"
 #include "decentralised_crypt.h"
+#include "dc_connection_dropped.h"
 
 class decentralised_p2p: public QObject
 {
@@ -27,10 +28,9 @@ class decentralised_p2p: public QObject
 
     signals:
         void dataReceived(QByteArray data);
-        void connectionEstablished();
-        void connectionDropped();
         void connectionIncoming(dc_peer* peer);
         void connectionOutgoing();
+        void connectionDropped(dc_connection_dropped reason);
         void serverStarted(int port);
         void serverError(QString message);
         void dnsSeedReceived(QString ip);

@@ -141,9 +141,9 @@ void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
         if(clientIndex > -1)
         {
             dc_peer *toRemove = _clients->takeAt(clientIndex);
-            // TODO: call a shutdown method on the peer to cleanup
+            delete toRemove;
             _clients->removeAt(clientIndex);
-            // TODO: notify/fire signal
+            emit connectionDropped(dc_connection_dropped::CONNECTED_TO_SELF);
             return;
         }
     }

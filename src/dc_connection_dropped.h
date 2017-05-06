@@ -1,0 +1,11 @@
+#ifndef DC_CONNECTION_DROPPED_H
+#define DC_CONNECTION_DROPPED_H
+
+enum dc_connection_dropped
+{
+    CONNECTED_TO_SELF = 10,
+    CONNECTION_ERROR = 20,
+    DISCONNECTED = 30
+};
+
+#endif // DC_CONNECTION_DROPPED_H
