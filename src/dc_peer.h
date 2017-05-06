@@ -23,6 +23,7 @@ public:
     void TryConnect(QString ip, int port);
     QHostAddress GetRemoteAddress();
     bool IsIncoming();
+    void Send(QByteArray data);
 
 signals:
     void on_connected();

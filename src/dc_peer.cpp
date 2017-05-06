@@ -66,6 +66,11 @@ void dc_peer::readTcpData()
     }
 }
 
+void dc_peer::Send(QByteArray data)
+{
+
+}
+
 void dc_peer::connectionError()
 {
     QString msg = _socket->errorString();

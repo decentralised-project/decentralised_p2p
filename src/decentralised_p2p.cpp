@@ -148,5 +148,7 @@ void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
         }
     }
 
+    sender->Send(instKeyBase58.toLocal8Bit());
+
     emit dataReceived(data);
 }
