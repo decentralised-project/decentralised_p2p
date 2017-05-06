@@ -136,9 +136,16 @@ void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
     QString remoteKeyBase58(data);
     if(instKeyBase58 == remoteKeyBase58)
     {
-        // TODO: drop connection to self
-
+        // drop connection to self
         int clientIndex = _clients->indexOf(sender);
+        if(clientIndex > -1)
+        {
+            dc_peer *toRemove = _clients->takeAt(clientIndex);
+            // TODO: call a shutdown method on the peer to cleanup
+            _clients->removeAt(clientIndex);
+            // TODO: notify/fire signal
+            return;
+        }
     }
 
     emit dataReceived(data);
