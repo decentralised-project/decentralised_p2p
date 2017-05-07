@@ -5,8 +5,8 @@ const QString _dnsSeeds[] = { "dnsseed.decentralised-project.org",
 
 decentralised_p2p::decentralised_p2p(EC_KEY *instanceKey, decentralised_crypt *crypt, QObject *parent, int incomingPort) :
     QObject(parent)
-    , _networkSession(Q_NULLPTR)
-    , _crypt(crypt)
+  , _networkSession(Q_NULLPTR)
+  , _crypt(crypt)
 {
     _instanceKey = instanceKey;
     _currentDnsSeedIndex = 0;
@@ -132,23 +132,27 @@ void decentralised_p2p::on_dnslookup(QHostInfo e)
 
 void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
 {
-    QString instKeyBase58 =_crypt->to_base58((EC_POINT*)_crypt->get_public_key(_instanceKey));
-    QString remoteKeyBase58(data);
-    if(instKeyBase58 == remoteKeyBase58)
+    if(sender->GetSecretKey().size() == 0)
     {
-        // drop connection to self
-        int clientIndex = _clients->indexOf(sender);
-        if(clientIndex > -1)
+        QString instKeyBase58 =_crypt->to_base58((EC_POINT*)_crypt->get_public_key(_instanceKey));
+        QString remoteKeyBase58(data);
+        if(instKeyBase58 == remoteKeyBase58)
         {
-            dc_peer *toRemove = _clients->takeAt(clientIndex);
-            delete toRemove;
-            _clients->removeAt(clientIndex);
-            emit connectionDropped(dc_connection_dropped::CONNECTED_TO_SELF);
-            return;
+            // drop connection to self
+            int clientIndex = _clients->indexOf(sender);
+            if(clientIndex > -1)
+            {
+                dc_peer *toRemove = _clients->takeAt(clientIndex);
+                delete toRemove;
+                _clients->removeAt(clientIndex);
+                emit connectionDropped(dc_connection_dropped::CONNECTED_TO_SELF);
+                return;
+            }
         }
+
+        // TODO _crypt->ecdh()
+        // TODO sender->SetSecretKey();
+        sender->Send(instKeyBase58.toLocal8Bit());
     }
-
-    sender->Send(instKeyBase58.toLocal8Bit());
-
     emit dataReceived(data);
 }

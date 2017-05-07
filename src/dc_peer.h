@@ -24,6 +24,8 @@ public:
     QHostAddress GetRemoteAddress();
     bool IsIncoming();
     void Send(QByteArray data);
+    void SetSecretKey(QByteArray key);
+    QByteArray GetSecretKey();
 
 signals:
     void on_connected();
@@ -48,8 +50,7 @@ private:
     QByteArray *_buffer;
 
     QString _localInstancePublicKey;
-    unsigned char* shared_secret;
-    int shared_secret_len;
+    QByteArray _shared_secret;
 };
 
 #endif // DC_PEER_H

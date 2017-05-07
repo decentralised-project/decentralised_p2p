@@ -68,7 +68,18 @@ void dc_peer::readTcpData()
 
 void dc_peer::Send(QByteArray data)
 {
+    _socket->write(intToArray(data.size()));
+    _socket->write(data);
+}
 
+void dc_peer::SetSecretKey(QByteArray key)
+{
+    _shared_secret = key;
+}
+
+QByteArray dc_peer::GetSecretKey()
+{
+    return _shared_secret;
 }
 
 void dc_peer::connectionError()
