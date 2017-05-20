@@ -150,8 +150,8 @@ void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
             }
         }
 
-        // TODO _crypt->ecdh()
-        // TODO sender->SetSecretKey();
+        QByteArray secret = _crypt->ecdh(_instanceKey, _crypt->from_base58(remoteKeyBase58));
+        sender->SetSecretKey(secret);
         sender->Send(instKeyBase58.toLocal8Bit());
     }
     emit dataReceived(data);
