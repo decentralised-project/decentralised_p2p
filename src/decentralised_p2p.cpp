@@ -58,7 +58,9 @@ void decentralised_p2p::Stop()
 
 void decentralised_p2p::Send(QByteArray data)
 {
-
+    for (QList<dc_peer*>::iterator it = _clients->begin(); it != _clients->end(); it++) {
+       (*it)->Send(data);
+    }
 }
 
 void decentralised_p2p::RequestDnsSeeds()
@@ -154,5 +156,7 @@ void decentralised_p2p::on_data_received(dc_peer *sender, QByteArray data)
         sender->SetSecretKey(secret);
         sender->Send(instKeyBase58.toLocal8Bit());
     }
-    emit dataReceived(data);
+    else
+        emit dataReceived(data);
+
 }
